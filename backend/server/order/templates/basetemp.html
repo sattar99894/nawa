@@ -1,0 +1,37 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="description" content="{% block meta_description %}Trendy fashion for everyone - discover our latest collection of clothing, accessories and more.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}fashion, clothing, online shop, ecommerce, style, trends{% endblock %}">
+    <meta name="author" content="Your Brand Name">
+    
+    <!-- Open Graph / Facebook (for social sharing) -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% if title %}{{ title }} | {% endif %}NAWA">
+    <meta property="og:description" content="{% block og_description %}Discover the latest fashion trends in our online store.{% endblock %}">
+    <meta property="og:image" content="{% static 'images/social-share.jpg' %}">
+
+    <!-- Favicon -->
+    {% comment %} <link rel="icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}"> {% endcomment %}
+    {% block extra_headers %} {% endblock %}
+    <title>{% if title %}{{ title }} | {% endif %}Nawa</title>
+</head>
+<body>
+
+    {% include 'header.html' %}
+
+    {% comment %} {% include 'inc/messages.html' %} {% endcomment %}
+
+    {% block content %} {% endblock %}
+
+    {% include 'footer.html' %}
+
+</body>
+</html>
