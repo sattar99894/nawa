@@ -8,12 +8,12 @@ from django.core.validators import MinValueValidator
 
 class Category(models.Model):
     title = models.CharField(max_length=200)
-    sub_category = models.ForeignKey('self', on_delete=models.CASCADE,related_name='sub_categories', null=True, blank=True)
+    sub_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     is_sub = models.BooleanField(default=False)
     slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:
-        ordering = ('name',)
+        ordering = ('title',)
         verbose_name = 'category'
         verbose_name_plural = 'categories'
 
@@ -29,20 +29,14 @@ class Category(models.Model):
         
 
 class Product(models.Model):
-    GENDER_CHOICES = [
-        ('M', 'Men'),
-        ('W', 'Women'),
-        ('U', 'Unisex'),
-    ]
 
 
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
     description = models.TextField()
     price = models.IntegerField()
     date_created = models.DateTimeField(auto_now_add=True)
     slug = models.SlugField(unique=True)
-    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
     is_active = models.BooleanField(default=True)
     date_created = models.DateTimeField(auto_now_add=True)
     date_update = models.DateTimeField(auto_now=True)
@@ -64,7 +58,7 @@ class Product(models.Model):
 
 
 class Gallery(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='product/images/')
     is_default = models.BooleanField(default=False)
     
@@ -81,7 +75,7 @@ class Variant(models.Model):
         ('XL', 'Extra Large'),
     ]
     
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='variants')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=2, choices=SIZE_CHOICES)
     stock = models.PositiveIntegerField(validators=[MinValueValidator(0)])
     sku = models.CharField(max_length=50, unique=True)
@@ -117,7 +111,7 @@ class Colors(models.Model):
         ("#00FF00", "lime green")
     ]
     
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     color = ColorField(samples=COLOR_PALETTE,default="#FFFFFF")
     is_default = models.BooleanField(default=False)
     

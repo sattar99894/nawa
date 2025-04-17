@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from .forms import UserCreationForm, UserChangeForm
 from .models import OtpCode
 from django.contrib.auth import get_user_model
-from core.models import Order
+# from core.models import Order
 
 User = get_user_model()
 

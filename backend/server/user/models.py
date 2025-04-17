@@ -1,16 +1,13 @@
-
-    
-
 """
  مدل های مربوط به اکانت یوزر ها و اطلاعات اصلی آنها
 """
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser
 from .managers import UserManager
-from django.utils.translation import gettextـlazy as ـ
+from django.utils.translation import gettext_lazy as _
 from django_jalali.db import models as jmodels
 from shop.models import Product
-from django.contrib.auth import getـuserـmodel
+from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
@@ -18,42 +15,43 @@ class User(AbstractBaseUser):
         """
         مدل های مربوط به اکانت یوزر ها و اطلاعات اصلی آنها
         """
-        username = models.CharField(maxـlength=250,verboseـname=ـ('username'),null=True,blank=True)
-        email = models.EmailField(null=True,blank=True,verboseـname=ـ('email'))
-        phone = models.CharField(unique=True,maxـlength=11,verboseـname=ـ('phone')) 
+        username = models.CharField(max_length=250,verbose_name=_('username'),null=True,blank=True)
+        email = models.EmailField(null=True,blank=True,verbose_name=_('email'))
+        phone = models.CharField(unique=True,max_length=11,verbose_name=_('phone')) 
 
-        isـactive = models.BooleanField(default=True)
-        isـadmin = models.BooleanField(default=False)
-        likes = models.ManyToManyField(Product, blank=True, relatedـname='likes')
+        is_active = models.BooleanField(default=True)
+        is_admin = models.BooleanField(default=False)
+        likes = models.ManyToManyField(Product, blank=True, related_name='likes')
         # set a manager role for shop manager to access orders and products
-        isـmanager = models.BooleanField(default=False)
-        createdـat = jmodels.jDateTimeField(autoـnowـadd=True,verboseـname=ـ('زمان عضویت'))
-        updatedـat = jmodels.jDateTimeField(autoـnow=True,verboseـname=ـ('زمان آخرین تغییرات'))
+        is_manager = models.BooleanField(default=False)
+        created_at = jmodels.jDateTimeField(auto_now_add=True,verbose_name=_('زمان عضویت'))
+        updated_at = jmodels.jDateTimeField(auto_now=True,verbose_name=_('زمان آخرین تغییرات'))
 
-        USERNAMEـFIELD = 'phone'
-        REQUIREDـFIELDS = ['email','username']
+        USERNAME_FIELD = 'phone'
+        REQUIRED_FIELDS = ['username', 'email']
         objects = UserManager()
 
         class Meta:
-            verboseـname = ـ('کاربر')
-            verboseـnameـplural = ـ('کاربرها')
+            verbose_name = _('کاربر')
+            verbose_name_plural = _('کاربرها')
 
 
-        def ــstrــ(self):
+        def __str__(self):
             return str(self.phone)
 
-        def hasـperm(self,perm,obj=None):
+        def has_perm(self,perm,obj=None):
             return True
 
-        def hasـmoduleـperms(self,appـlabel):
+        def has_module_perms(self,app_label):
             return True
 
         @property
-        def isـstaff(self):
-            return self.isـadmin
+        def is_staff(self):
+            return self.is_admin
 
-        def getـlikesـcount(self):
+        def get_likes_count(self):
             return self.likes.count()
+
 
 class OtpCode(models.Model):
         """
@@ -62,10 +60,25 @@ class OtpCode(models.Model):
         که برای اینکه نمی‌دانیم فرد ثبت نام کرده است یا نه 
         و بخاطر استفاده از روش کلاس در ویو و سرعت کار از چرکتر فیلد برای شماره همراه استفاده شده است 
         """    
-        phone = models.CharField(maxـlength=11, unique=True)
+        phone = models.CharField(max_length=11, unique=True)
         code = models.PositiveSmallIntegerField()
 
-        created = models.DateTimeField(autoـnow=True)
+        created = models.DateTimeField(auto_now=True)
 
-        def ــstrــ(self):
+        def __str__(self):
             return f'{self.phone} - {self.code} - {self.created}'
+        
+
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='addresses')
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    postal_code = models.CharField(max_length=20)
+    address = models.CharField(max_length=900)
+
+    
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name_plural = _('آدرس ها')
