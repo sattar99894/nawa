@@ -7,6 +7,7 @@ from django.core.validators import MinValueValidator
 
 
 class Category(models.Model):
+    
     title = models.CharField(max_length=200)
     sub_category = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
     is_sub = models.BooleanField(default=False)
@@ -30,7 +31,6 @@ class Category(models.Model):
 
 class Product(models.Model):
 
-
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField(max_length=250)
     description = models.TextField()
@@ -43,8 +43,8 @@ class Product(models.Model):
 
     class Meta:
         ordering = ('-date_created',)
-        verbose_name = 'category'
-        verbose_name_plural = 'categories'
+        verbose_name = 'Product'
+        verbose_name_plural = 'Products'
 
     def __str__(self):
         return self.slug

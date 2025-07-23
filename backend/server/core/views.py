@@ -6,12 +6,12 @@ from django.contrib import messages
 
 class IndexView(View):
     def get(self, request, category_slug=None):
-        products = Product.objects.filter(available=True)
+        products = Product.objects.filter(is_active=True)
         categories = Category.objects.filter(is_sub=False)
         if category_slug:
             category = Category.objects.get(slug=category_slug)
             products = products.filter(category=category)
-        return render(request, 'core/index.html', {'products':products, 'categories':categories})
+        return render(request, 'index.html', {'products':products, 'categories':categories})
 
 
 # class ProductDetailView(View):
